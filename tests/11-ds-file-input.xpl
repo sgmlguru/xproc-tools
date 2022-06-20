@@ -11,10 +11,10 @@
     <p:pipe port="result" step="loader"/>
   </p:output>
 		
-	<p:import href="../src/directory-source.xpl"/>
+	<p:import href="../xproc/directory-source.xpl"/>
 	
   <ccproc:directory-source name="loader" fail-on-error='true'>
-    <p:with-option name="path" select="resolve-uri('data/dir-source/01/file01.xml')"></p:with-option>
+    <p:with-option name="path" select="resolve-uri('data/dir-source/01/file01.xml')"/>
   </ccproc:directory-source>
 
 	

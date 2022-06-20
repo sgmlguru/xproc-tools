@@ -196,7 +196,7 @@
 
 		<!-- run the stylesheet, merging parameters - params from the
 				XProc run override those in the manifest -->
-		<p:xslt name="run-single-xslt">
+		<p:xslt name="run-single-xslt" version="3.0">
 			<p:input port="stylesheet">
 				<p:pipe port="matched" step="split-stylesheets"/>
 			</p:input>
@@ -244,6 +244,7 @@
 						<p:pipe port="parameters" step="threaded-xslt-impl"/>
 					</p:input>
 					
+					<!-- make sure the verbose option is also transmitted -->
 					<p:with-option name="verbose" select="$verbose"/>
 
 				</ccproc:threaded-xslt-impl>
