@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
 	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps" 
-	xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0" name="test">
+	xmlns:c="http://www.w3.org/ns/xproc-step"
+	version="1.0"
+	name="test">
 	
 	<p:input port="source">
-		<p:document href="data/test-04.xml"></p:document>
+		<p:document href="data/test-04.xml"/>
 	</p:input>
 	
 	<p:output port="result">
@@ -12,13 +14,13 @@
 	</p:output>
 	
 	
-	<p:import href="../src/split-document.xpl"/>
+	<p:import href="../xproc/split-document.xpl"/>
 	
 	<ccproc:split-document name="split-test">
 			<p:input port="source">
 				<p:pipe port="source" step="test"/>
 			</p:input>
-			<p:with-option name="match" select="'//para'"></p:with-option>
+			<p:with-option name="match" select="'//para'"/>
 	</ccproc:split-document>
 	
 	<p:count name="count-results">
