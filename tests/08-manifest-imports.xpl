@@ -15,7 +15,7 @@
 			<p:pipe port="result" step="load-manifest"></p:pipe>
 	</p:output>
 	
-	<p:import href="../src/load-sequence-from-file.xpl"/>
+	<p:import href="../xproc/load-sequence-from-file.xpl"/>
 	
 	
 	<ccproc:normalise-manifest name="load-manifest">
