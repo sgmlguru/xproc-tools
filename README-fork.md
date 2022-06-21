@@ -13,3 +13,15 @@ We note the following:
 * Some of Nic's XProc 1.0 libraries will no longer be needed:
 	- The recursive directory listing steps can be reimplemented using standard XProc 3.0.
 	- The required Calabash extension steps can all be reimplemented using standard XProc 3.0.
+
+
+## oXygen XProc Frameworks
+
+As there is not yet an out-of-the-box XProc 3.0 framework for oXygen, I have added a `framework` folder containing, well, frameworks for XProc 1.0 and 3.0. Here's how it works:
+
+* The MIME type for `.xpl` files is now `text/xml` rather than `text/xproc`, which means that they will be opened using the default XML editor.
+* As XProc 1.0 validation was part of the XProc Editor mode, 1.0 pipelines are now validated using a Relax NG schema in the `framework/resources/rng` subfolder.
+* Similarly, XProc 3.0 validation is als against a Relax NG schema in `framework/resources/rng`.
+* What RNG is used for XProc validation depends on the `@version` attribute.
+
+The `framework` folder will be removed once oXygen provides 1.0 and 3.0 support out of the box.
