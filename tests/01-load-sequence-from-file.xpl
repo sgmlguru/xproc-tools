@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+<p:declare-step
+	xmlns:p="http://www.w3.org/ns/xproc"
 	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
 	xmlns:c="http://www.w3.org/ns/xproc-step"
-	version="1.0"
+	xmlns:test="http://www.corbas.co.uk/ns/test"
+	version="3.0"
 	name="test-script">
 	
 	<p:documentation>Simple test driver for the load-sequence-from-file module. Tests loading of two simple documents.</p:documentation>
 	
-	<p:serialization port="result" indent="true"/>
+	<p:import href="../xproc/load-sequence-from-file.xpl"/>
 	
 	<p:input port="manifest">
 		<p:inline>
@@ -18,22 +20,20 @@
 		</p:inline>
 	</p:input>
 	
-	<p:output port="result">
+	<p:output port="result" serialization="map{'indent': true()}">
 		<p:pipe port="result" step="merge-load"/>
 	</p:output>
 	
-	<p:import href="../xproc/load-sequence-from-file.xpl"/>
-	
 	<ccproc:load-sequence-from-file name="load-manifest">
-		<p:input port="source">
+		<p:with-input port="source">
 			<p:pipe port="manifest" step="test-script"/>
-		</p:input>
+		</p:with-input>
 	</ccproc:load-sequence-from-file>
 	
-	<p:wrap-sequence name="merge-load" wrapper="sequence" wrapper-namespace="http://www.corbas.co.uk/ns/test">
-		<p:input port="source">
+	<p:wrap-sequence name="merge-load" wrapper="test:sequence">
+		<p:with-input port="source">
 			<p:pipe port="result" step="load-manifest"/>
-		</p:input>
+		</p:with-input>
 	</p:wrap-sequence>
 	
 </p:declare-step>
