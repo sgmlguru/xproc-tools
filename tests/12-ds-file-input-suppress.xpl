@@ -15,7 +15,7 @@
 		
 	<p:import href="../xproc/directory-source.xpl"/>
 	
-  <ccproc:directory-source name="loader" fail-on-error='fakse'>
+  <ccproc:directory-source name="loader" fail-on-error='false'>
     <p:with-option name="path" select="resolve-uri('data/dir-source/01/file01.xml')"/>
   </ccproc:directory-source>
 
