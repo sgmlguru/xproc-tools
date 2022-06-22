@@ -15,7 +15,7 @@
 	</p:input>
 
 	<p:output port="result" serialization="map{'indent': true()}">
-			<p:pipe port="result" step="wrapper"></p:pipe>
+		<p:pipe port="result" step="wrapper"/>
 	</p:output>
 	
 	<ccproc:load-sequence-from-file name="loader">
