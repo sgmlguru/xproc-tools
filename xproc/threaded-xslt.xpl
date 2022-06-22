@@ -2,12 +2,14 @@
 	name="threaded-xslt"
 	type="ccproc:threaded-xslt"
 	exclude-inline-prefixes="#all"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:c="http://www.w3.org/ns/xproc-step"
 	xmlns:data="http://www.corbas.co.uk/ns/transforms/data"
 	xmlns:meta="http://www.corbas.co.uk/ns/transforms/meta"
 	xmlns:cx="http://xmlcalabash.com/ns/extensions"
 	xmlns:p="http://www.w3.org/ns/xproc"
 	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	version="3.0">
 
 	<p:documentation> This program and accompanying files are copyright 2008, 2009, 2011, 2012,
@@ -46,7 +48,7 @@
 		</p:documentation>
 	</p:input>
 
-	<p:input port="parameters" kind="parameter" primary="true">
+	<p:input port="parameters" sequence="true"><!-- kind="parameter" primary="true" -->
 		<p:documentation>
 			<p xmlns="http:/www.w3.org/1999/xhtml">The parameters to be passed to the p:xslt
 				steps.</p>
@@ -75,17 +77,15 @@
 			<p>Set this to 'true' to get a listing of each stylesheet as it is applied.</p>
 		</p:documentation>
 	</p:option>
-
-	<!--<p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>-->
-
+	
+	
 	<p:declare-step
 		name="convert-meta"
 		type="ccproc:convert-meta-to-param">
 		<p:documentation xmlns="http:/wwww.w3.org/1999/xhtml">
 			<p>This step converts attributes in the http://www.corbas.co.uk/ns/transforms/meta
 				namesapce to parameters to be applied to the stylesheet. The attributes are not
-				removed from the stylesheet. The result of this a step is a <code>c:param-set</code>
-				element.</p>
+				removed from the stylesheet. The result of this a step is a map.</p>
 		</p:documentation>
 
 		<p:input port="stylesheet" primary="true">
@@ -99,14 +99,15 @@
 		</p:output>
 
 
-		<p:xslt name="build-parameters" version="2.0">
+		<p:xslt name="build-parameters" version="3.0" message="Generating parameters for {base-uri(.)}">
 
 			<!-- WE ARE PROCESSING A STYLESHEET! -->
 			<p:with-input port="source">
 				<p:pipe port="stylesheet" step="convert-meta"/>
 			</p:with-input>
 			<p:with-input port="stylesheet">
-				<p:document href="http://xml.corbas.co.uk/xml/xproc-tools/xslt/build-params.xsl"/>
+				<p:document href="../xslt/build-params.xsl"/>
+				<!-- http://xml.corbas.co.uk/xml/xproc-tools/xslt/build-params.xsl -->
 			</p:with-input>
 		</p:xslt>
 
@@ -136,7 +137,7 @@
 			</p:documentation>
 		</p:input>
 
-		<p:input port="parameters" kind="parameter" primary="true">
+		<p:input port="parameters" sequence="true"><!-- kind="parameter" primary="true" -->
 			<p:documentation>
 				<p xmlns="http:/www.w3.org/1999/xhtml">XSLT parameters</p>
 			</p:documentation>
@@ -149,6 +150,7 @@
 			</p:documentation>
 			<p:pipe port="result" step="determine-recursion"/>
 		</p:output>
+		
 
 		<p:option name="verbose" select="'false'">
 			<p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -174,22 +176,40 @@
 				<p:pipe port="not-matched" step="split-stylesheets"/>
 			</p:with-input>
 		</p:count>
+		
+		<p:variable name="test" select="number(/c:result)">
+			<p:pipe port="result" step="count-remaining-transformations"/>
+		</p:variable>
 
 
 		<!-- find any metadata attributes on the stylesheet (these may be
 			created by load-sequence-from-file) and convert them to a
-			param-set to pass to Saxon -->
+			map to pass to Saxon -->
 		<ccproc:convert-meta-to-param
 			name="additional-params">
 			<p:with-input port="stylesheet">
 				<p:pipe port="matched" step="split-stylesheets"/>
 			</p:with-input>
 		</ccproc:convert-meta-to-param>
+		
+		<p:variable name="current" select="string-join(for $x in //* return name($x),' ')">
+			<p:pipe port="matched" step="split-stylesheets"/>
+		</p:variable>
+		
+		<p:variable name="doc" select="string-join(for $x in //* return name($x),' ')">
+			<p:pipe port="source" step="threaded-xslt-impl"/>
+		</p:variable>
+		
+		<p:identity message="{$test}"/>
+		
+		<p:identity message="{$current}"/>
+		
+		<p:identity message="{$doc}"></p:identity>
 
 		<!-- what are we running (verbose only) -->
 		<p:choose name="check-verbose">
 			<p:when test="$verbose = 'true'">
-				<cx:message>
+				<!--<cx:message>
 
 					<p:with-option name="message" select="concat('Running - ', 
 							(/xsl:stylesheet/@meta:description, 
@@ -198,7 +218,27 @@
 							[1])">
 						<p:pipe port="matched" step="split-stylesheets"/>
 					</p:with-option>
-				</cx:message>
+				</cx:message>-->
+				
+				<!--<p:identity message="{
+					'Running - ' ||
+					/xsl:stylesheet/@meta:description ||
+					/xsl:stylesheet/@meta:name ||
+					tokenize(document-uri(/), '/')[last()][1]
+					}">
+					<p:with-input>
+						<p:pipe port="matched" step="split-stylesheets"/>
+					</p:with-input>
+				</p:identity>-->
+				
+				<p:identity>
+					<p:with-input>
+						<p:inline>
+							<p>Running</p>
+						</p:inline>
+					</p:with-input>
+				</p:identity>
+				
 			</p:when>
 			<p:otherwise>
 				<p:identity/>
@@ -212,13 +252,13 @@
 			<p:with-input port="stylesheet">
 				<p:pipe port="matched" step="split-stylesheets"/>
 			</p:with-input>
-			<p:with-input port="source">
+			<p:with-input port="source" select="/">
 				<p:pipe port="source" step="threaded-xslt-impl"/>
 			</p:with-input>
-			<p:with-input port="parameters">
+			<p:with-option name="parameters" select=".">
 				<p:pipe port="result" step="additional-params"/>
 				<p:pipe port="parameters" step="threaded-xslt-impl"/>
-			</p:with-input>
+			</p:with-option>
 		</p:xslt>
 
 
@@ -233,14 +273,9 @@
 				<p:pipe port="result" step="count-remaining-transformations"/>
 			</p:xpath-context>-->
 			
-			<p:with-input>
-				<p:pipe port="result" step="count-remaining-transformations"/>
-			</p:with-input>
-
-
 			<!-- If we have any transformations remaining recurse -->
-			<p:when test="number(c:result)>0">
-
+			<p:when test="$test &gt; 0">
+				
 				<p:output port="result" sequence="true">
 					<p:pipe port="result" step="run-single-xslt"/>
 					<p:pipe port="result" step="continue-recursion"/>
@@ -289,7 +324,7 @@
 
 	<!-- run it all -->
 	<ccproc:threaded-xslt-impl name="run-threaded-xslt">
-
+		
 		<p:with-input port="source">
 			<p:pipe port="source" step="threaded-xslt"/>
 		</p:with-input>
@@ -301,7 +336,7 @@
 		<p:with-input port="parameters">
 			<p:pipe port="parameters" step="threaded-xslt"/>
 		</p:with-input>
-
+		
 		<p:with-option name="verbose" select="$verbose"/>
 
 	</ccproc:threaded-xslt-impl>

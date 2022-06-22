@@ -30,6 +30,24 @@
 		</p:with-input>
 	</ccproc:load-sequence-from-file>
 	
-	<p:identity name="threader"/>
+	<p:split-sequence
+		name="split"
+		test="position()=1">
+		<p:with-input port="source">
+			<p:pipe port="result" step="loader"/>
+		</p:with-input>
+	</p:split-sequence>
+	
+	<p:count name="count">
+		<p:with-input port="source" pipe="not-matched@split"></p:with-input>
+	</p:count>
+	
+	<p:variable name="numb" select="number(/c:result)">
+		<p:pipe port="result" step="count"/>
+	</p:variable>
+	
+	<p:identity name="threader">
+		<p:with-input select="$numb"/>
+	</p:identity>
 
 </p:declare-step>

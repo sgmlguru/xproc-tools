@@ -19,7 +19,7 @@
 		<p:document href="data/test-03.xml"/>
 	</p:input>
 
-	<p:output port="result" serialization="map{'indent': true()}">
+	<p:output port="result" serialization="map{'indent': true()}" sequence="true">
 		<p:pipe port="result" step="threader"/>
 	</p:output>
 
