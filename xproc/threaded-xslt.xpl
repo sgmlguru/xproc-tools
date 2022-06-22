@@ -48,7 +48,7 @@
 		</p:documentation>
 	</p:input>
 
-	<p:input port="parameters" sequence="true"><!-- kind="parameter" primary="true" -->
+	<p:input port="parameters" sequence="true">
 		<p:documentation>
 			<p xmlns="http:/www.w3.org/1999/xhtml">The parameters to be passed to the p:xslt
 				steps.</p>
@@ -99,7 +99,9 @@
 		</p:output>
 
 
-		<p:xslt name="build-parameters" version="3.0" message="Generating parameters for {base-uri(.)}">
+		<p:xslt
+			name="build-parameters"
+			version="3.0">
 
 			<!-- WE ARE PROCESSING A STYLESHEET! -->
 			<p:with-input port="source">
@@ -137,7 +139,7 @@
 			</p:documentation>
 		</p:input>
 
-		<p:input port="parameters" sequence="true"><!-- kind="parameter" primary="true" -->
+		<p:input port="parameters" sequence="true">
 			<p:documentation>
 				<p xmlns="http:/www.w3.org/1999/xhtml">XSLT parameters</p>
 			</p:documentation>
@@ -152,7 +154,7 @@
 		</p:output>
 		
 
-		<p:option name="verbose" select="'false'">
+		<p:option name="verbose" select="'true'">
 			<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 				<p>Set this to 'true' to get a listing of each stylesheet as it is applied.</p>
 			</p:documentation>
@@ -180,6 +182,8 @@
 		<p:variable name="test" select="number(/c:result)">
 			<p:pipe port="result" step="count-remaining-transformations"/>
 		</p:variable>
+		
+		<!--<p:identity message="{if ($test >0) then ('true') else ('false')}"/>-->
 
 
 		<!-- find any metadata attributes on the stylesheet (these may be
@@ -192,20 +196,7 @@
 			</p:with-input>
 		</ccproc:convert-meta-to-param>
 		
-		<p:variable name="current" select="string-join(for $x in //* return name($x),' ')">
-			<p:pipe port="matched" step="split-stylesheets"/>
-		</p:variable>
 		
-		<p:variable name="doc" select="string-join(for $x in //* return name($x),' ')">
-			<p:pipe port="source" step="threaded-xslt-impl"/>
-		</p:variable>
-		
-		<p:identity message="{$test}"/>
-		
-		<p:identity message="{$current}"/>
-		
-		<p:identity message="{$doc}"></p:identity>
-
 		<!-- what are we running (verbose only) -->
 		<p:choose name="check-verbose">
 			<p:when test="$verbose = 'true'">
@@ -252,7 +243,7 @@
 			<p:with-input port="stylesheet">
 				<p:pipe port="matched" step="split-stylesheets"/>
 			</p:with-input>
-			<p:with-input port="source" select="/">
+			<p:with-input port="source">
 				<p:pipe port="source" step="threaded-xslt-impl"/>
 			</p:with-input>
 			<p:with-option name="parameters" select=".">
@@ -274,7 +265,7 @@
 			</p:xpath-context>-->
 			
 			<!-- If we have any transformations remaining recurse -->
-			<p:when test="$test &gt; 0">
+			<p:when test="$test > 0">
 				
 				<p:output port="result" sequence="true">
 					<p:pipe port="result" step="run-single-xslt"/>
@@ -344,8 +335,9 @@
 
 	<p:split-sequence
 		name="get-last-document"
-		test="position() = last()">
-		<p:with-input port="source">
+		test="position() = last()"
+		initial-only="true">
+		<p:with-input>
 			<p:pipe port="result" step="run-threaded-xslt"/>
 		</p:with-input>
 	</p:split-sequence>
