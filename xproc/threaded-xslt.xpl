@@ -1,13 +1,18 @@
-<p:declare-step name="threaded-xslt" type="ccproc:threaded-xslt" exclude-inline-prefixes="#all"
-	xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0"
+<p:declare-step
+	name="threaded-xslt"
+	type="ccproc:threaded-xslt"
+	exclude-inline-prefixes="#all"
+	xmlns:c="http://www.w3.org/ns/xproc-step"
 	xmlns:data="http://www.corbas.co.uk/ns/transforms/data"
 	xmlns:meta="http://www.corbas.co.uk/ns/transforms/meta"
-	xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:p="http://www.w3.org/ns/xproc"
-	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps">
+	xmlns:cx="http://xmlcalabash.com/ns/extensions"
+	xmlns:p="http://www.w3.org/ns/xproc"
+	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
+	version="3.0">
 
 	<p:documentation> This program and accompanying files are copyright 2008, 2009, 2011, 2012,
-		2013, 2015 Corbas Consulting Ltd. This program is free software: you can redistribute it and/or
-		modify it under the terms of the GNU General Public License as published by the Free
+		2013, 2015 Corbas Consulting Ltd. This program is free software: you can redistribute it
+		and/or modify it under the terms of the GNU General Public License as published by the Free
 		Software Foundation, either version 3 of the License, or (at your option) any later version.
 		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -71,9 +76,11 @@
 		</p:documentation>
 	</p:option>
 
-	<p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+	<!--<p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>-->
 
-	<p:declare-step name="convert-meta" type="ccproc:convert-meta-to-param">
+	<p:declare-step
+		name="convert-meta"
+		type="ccproc:convert-meta-to-param">
 		<p:documentation xmlns="http:/wwww.w3.org/1999/xhtml">
 			<p>This step converts attributes in the http://www.corbas.co.uk/ns/transforms/meta
 				namesapce to parameters to be applied to the stylesheet. The attributes are not
@@ -82,33 +89,33 @@
 		</p:documentation>
 
 		<p:input port="stylesheet" primary="true">
-			<p:documentation xmlns="http:/wwww.w3.org/1999/xhtml"><p>The stylesheet to be
-					modified</p></p:documentation>
+			<p:documentation xmlns="http:/wwww.w3.org/1999/xhtml">
+				<p>The stylesheet to be modified</p>
+			</p:documentation>
 		</p:input>
 
 		<p:output port="result" primary="true">
 			<p:pipe port="result" step="build-parameters"/>
 		</p:output>
 
+
 		<p:xslt name="build-parameters" version="2.0">
 
 			<!-- WE ARE PROCESSING A STYLESHEET! -->
-			<p:input port="source">
+			<p:with-input port="source">
 				<p:pipe port="stylesheet" step="convert-meta"/>
-			</p:input>
-			<p:input port="stylesheet">
-			  <p:document href="http://xml.corbas.co.uk/xml/xproc-tools/xslt/build-params.xsl"/>
-			</p:input>
-			<p:input port="parameters">
-				<p:empty/>
-			</p:input>
-
+			</p:with-input>
+			<p:with-input port="stylesheet">
+				<p:document href="http://xml.corbas.co.uk/xml/xproc-tools/xslt/build-params.xsl"/>
+			</p:with-input>
 		</p:xslt>
-
 
 	</p:declare-step>
 
-	<p:declare-step name="threaded-xslt-impl" type="ccproc:threaded-xslt-impl"
+
+	<p:declare-step
+		name="threaded-xslt-impl"
+		type="ccproc:threaded-xslt-impl"
 		exclude-inline-prefixes="#all">
 
 		<p:documentation>
@@ -150,27 +157,33 @@
 		</p:option>
 
 		<!-- Split of the first transformation from the sequence -->
-		<p:split-sequence name="split-stylesheets" initial-only="true" test="position()=1">
-			<p:input port="source">
+		<p:split-sequence
+			name="split-stylesheets"
+			initial-only="true"
+			test="position()=1">
+			<p:with-input port="source">
 				<p:pipe port="stylesheets" step="threaded-xslt-impl"/>
-			</p:input>
+			</p:with-input>
 		</p:split-sequence>
 
 		<!-- How many of these are left? We actually only care to know  if there are *any* hence the limit. -->
-		<p:count name="count-remaining-transformations" limit="1">
-			<p:input port="source">
+		<p:count
+			name="count-remaining-transformations"
+			limit="1">
+			<p:with-input port="source">
 				<p:pipe port="not-matched" step="split-stylesheets"/>
-			</p:input>
+			</p:with-input>
 		</p:count>
 
 
 		<!-- find any metadata attributes on the stylesheet (these may be
 			created by load-sequence-from-file) and convert them to a
 			param-set to pass to Saxon -->
-		<ccproc:convert-meta-to-param name="additional-params">
-			<p:input port="stylesheet">
+		<ccproc:convert-meta-to-param
+			name="additional-params">
+			<p:with-input port="stylesheet">
 				<p:pipe port="matched" step="split-stylesheets"/>
-			</p:input>
+			</p:with-input>
 		</ccproc:convert-meta-to-param>
 
 		<!-- what are we running (verbose only) -->
@@ -178,8 +191,7 @@
 			<p:when test="$verbose = 'true'">
 				<cx:message>
 
-					<p:with-option name="message"
-						select="concat('Running - ', 
+					<p:with-option name="message" select="concat('Running - ', 
 							(/xsl:stylesheet/@meta:description, 
 							/xsl:stylesheet/@meta:name, 
 							tokenize(document-uri(/), '/')[last()])
@@ -189,7 +201,7 @@
 				</cx:message>
 			</p:when>
 			<p:otherwise>
-				<p:identity/> 
+				<p:identity/>
 			</p:otherwise>
 		</p:choose>
 		<p:sink/>
@@ -197,16 +209,16 @@
 		<!-- run the stylesheet, merging parameters - params from the
 				XProc run override those in the manifest -->
 		<p:xslt name="run-single-xslt" version="3.0">
-			<p:input port="stylesheet">
+			<p:with-input port="stylesheet">
 				<p:pipe port="matched" step="split-stylesheets"/>
-			</p:input>
-			<p:input port="source">
+			</p:with-input>
+			<p:with-input port="source">
 				<p:pipe port="source" step="threaded-xslt-impl"/>
-			</p:input>
-			<p:input port="parameters">
+			</p:with-input>
+			<p:with-input port="parameters">
 				<p:pipe port="result" step="additional-params"/>
 				<p:pipe port="parameters" step="threaded-xslt-impl"/>
-			</p:input>
+			</p:with-input>
 		</p:xslt>
 
 
@@ -217,9 +229,13 @@
    		-->
 		<p:choose name="determine-recursion">
 
-			<p:xpath-context>
+			<!--<p:xpath-context>
 				<p:pipe port="result" step="count-remaining-transformations"/>
-			</p:xpath-context>
+			</p:xpath-context>-->
+			
+			<p:with-input>
+				<p:pipe port="result" step="count-remaining-transformations"/>
+			</p:with-input>
 
 
 			<!-- If we have any transformations remaining recurse -->
@@ -232,18 +248,18 @@
 
 				<ccproc:threaded-xslt-impl name="continue-recursion">
 
-					<p:input port="stylesheets">
+					<p:with-input port="stylesheets">
 						<p:pipe port="not-matched" step="split-stylesheets"/>
-					</p:input>
+					</p:with-input>
 
-					<p:input port="source">
+					<p:with-input port="source">
 						<p:pipe port="result" step="run-single-xslt"/>
-					</p:input>
-					
-					<p:input port="parameters">
+					</p:with-input>
+
+					<p:with-input port="parameters">
 						<p:pipe port="parameters" step="threaded-xslt-impl"/>
-					</p:input>
-					
+					</p:with-input>
+
 					<!-- make sure the verbose option is also transmitted -->
 					<p:with-option name="verbose" select="$verbose"/>
 
@@ -259,9 +275,9 @@
 				</p:output>
 
 				<p:identity name="terminate-recursion">
-					<p:input port="source">
+					<p:with-input port="source">
 						<p:pipe port="result" step="run-single-xslt"/>
-					</p:input>
+					</p:with-input>
 				</p:identity>
 
 			</p:otherwise>
@@ -269,33 +285,35 @@
 		</p:choose>
 
 	</p:declare-step>
-	
+
 
 	<!-- run it all -->
 	<ccproc:threaded-xslt-impl name="run-threaded-xslt">
 
-		<p:input port="source">
+		<p:with-input port="source">
 			<p:pipe port="source" step="threaded-xslt"/>
-		</p:input>
+		</p:with-input>
 
-		<p:input port="stylesheets">
+		<p:with-input port="stylesheets">
 			<p:pipe port="stylesheets" step="threaded-xslt"/>
-		</p:input>
+		</p:with-input>
 
-		<p:input port="parameters">
+		<p:with-input port="parameters">
 			<p:pipe port="parameters" step="threaded-xslt"/>
-		</p:input>
+		</p:with-input>
 
 		<p:with-option name="verbose" select="$verbose"/>
 
 	</ccproc:threaded-xslt-impl>
 
-	<p:split-sequence name="get-last-document" test="position() = last()">
-		<p:input port="source">
-			<p:pipe port="result" step="run-threaded-xslt"/>
-		</p:input>
-	</p:split-sequence>
 
+	<p:split-sequence
+		name="get-last-document"
+		test="position() = last()">
+		<p:with-input port="source">
+			<p:pipe port="result" step="run-threaded-xslt"/>
+		</p:with-input>
+	</p:split-sequence>
 
 
 </p:declare-step>
