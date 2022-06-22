@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:library xmlns:p="http://www.w3.org/ns/xproc" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<p:library
+	xmlns:p="http://www.w3.org/ns/xproc"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:data="http://www.corbas.co.uk/ns/transforms/data"
 	xmlns:manifest="http://www.corbas.co.uk/ns/transforms/manifest"
 	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-	xmlns:c="http://www.w3.org/ns/xproc-step" version="3.0">
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:cx="http://xmlcalabash.com/ns/extensions"
+	xmlns:c="http://www.w3.org/ns/xproc-step"
+	version="3.0">
 
-	<p:declare-step type="ccproc:load-sequence-from-file" name="load-sequence-from-file">
+	<p:declare-step
+		type="ccproc:load-sequence-from-file"
+		name="load-sequence-from-file">
 
 		<p:documentation xmlns="http://wwww.w3.org/1999/xhtml">
 			<p>This program and accompanying files are copyright 2008, 2009, 20011, 2012, 2013
@@ -51,8 +57,6 @@
 			</p:documentation>
 			<p:pipe port="result" step="load-iterator"/>
 		</p:output>
-
-		<!--<p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>-->
 
 		<p:declare-step name="process-metadata" type="ccproc:process-metadata">
 			<p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -134,13 +138,10 @@
 					<p:pipe port="metadata" step="insert-metadata"/>
 				</p:with-input>
 			</p:count>
+			
 
 			<p:choose name="metadata-actions">
-
-				<!--<p:xpath-context>
-					<p:pipe port="result" step="count-metadata"/>
-				</p:xpath-context>-->
-
+				
 				<p:with-input>
 					<p:pipe port="result" step="count-metadata"/>
 				</p:with-input>
@@ -175,9 +176,9 @@
 					</p:split-sequence>
 
 					<!-- add the attribute -->
-					<!-- attribute-namespace="http://www.corbas.co.uk/ns/transforms/meta" attribute-prefix="meta" -->
 					<p:add-attribute name="insert-meta-item" match="/*">
-						<p:with-option name="attribute-name"
+						<p:with-option
+							name="attribute-name"
 							select="QName('http://www.corbas.co.uk/ns/transforms/meta',/manifest:meta/@name)">
 							<p:pipe port="matched" step="split-metadata"/>
 						</p:with-option>
@@ -209,6 +210,7 @@
 		<!-- Get the manifest into a simple flat format. -->
 		<ccproc:normalise-manifest name="load-manifest"/>
 
+
 		<!-- Loop over input and load each file in turn. 
 		We don't handle errors here because the default behaviour (exit with error)
 		is the desired behaviour and the error message is just fine -->
@@ -216,18 +218,15 @@
 
 			<p:output port="result" primary="true"/>
 
-			<!--<p:iteration-source select="/manifest:manifest/*">
-				<p:pipe port="result" step="load-manifest"/>
-			</p:iteration-source>-->
-
 			<p:with-input select="/manifest:manifest/*">
 				<p:pipe port="result" step="load-manifest"/>
 			</p:with-input>
 
+
 			<p:choose name="load-item">
 
 				<p:when test="/manifest:item">
-
+					
 					<p:output port="result">
 						<p:pipe port="result" step="load-doc"/>
 					</p:output>
@@ -241,7 +240,7 @@
 				</p:when>
 
 				<p:otherwise>
-
+					
 					<p:output port="result">
 						<p:pipe port="result" step="process-item"/>
 					</p:output>
@@ -250,28 +249,16 @@
 
 					<p:variable name="href" select="/manifest:processed-item/manifest:item/@href"/>
 
-
-					<!--<cx:message name="wtf">
-						<p:with-option name="message" select="concat('root: ', name(/*))"/>
-					</cx:message>-->
-
-
-					<!--<cx:message>
-						<p:with-option name="message" select="concat('stylesheet: ', $stylesheet)"/>
-					</cx:message>-->
-
-
-					<p:load name="load-stylesheet"
-						message="{concat('root: ', name(/*)) || ',' || concat('stylesheet: ', $stylesheet)}">
-						<p:with-option name="href" select="$stylesheet"/>
+					<p:load
+						name="load-stylesheet"
+						message="{'root: ' || name(/*) || ',' || concat('stylesheet: ', $stylesheet)}">
+						<p:with-option name="href" select="xs:string($stylesheet)"/>
 					</p:load>
 
-					<!--<cx:message>
-						<p:with-option name="message" select="concat('processed item: ', $href)"/>
-					</cx:message>-->
-
-					<p:load name="load-data" message="{concat('processed item: ', $href)}">
-						<p:with-option name="href" select="$href"/>
+					<p:load
+						name="load-data"
+						message="{'processed item: ' || $href}">
+						<p:with-option name="href" select="xs:string($href)"/>
 					</p:load>
 
 					<p:xslt name="process-item">
@@ -282,7 +269,6 @@
 							<p:pipe port="result" step="load-data"/>
 						</p:with-input>
 					</p:xslt>
-
 
 				</p:otherwise>
 			</p:choose>
