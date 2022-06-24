@@ -183,8 +183,6 @@
 			<p:pipe port="result" step="count-remaining-transformations"/>
 		</p:variable>
 		
-		<!--<p:identity message="{if ($test >0) then ('true') else ('false')}"/>-->
-
 
 		<!-- find any metadata attributes on the stylesheet (these may be
 			created by load-sequence-from-file) and convert them to a
@@ -200,33 +198,27 @@
 		<!-- what are we running (verbose only) -->
 		<p:choose name="check-verbose">
 			<p:when test="$verbose = 'true'">
-				<!--<cx:message>
-
-					<p:with-option name="message" select="concat('Running - ', 
-							(/xsl:stylesheet/@meta:description, 
-							/xsl:stylesheet/@meta:name, 
-							tokenize(document-uri(/), '/')[last()])
-							[1])">
-						<p:pipe port="matched" step="split-stylesheets"/>
-					</p:with-option>
-				</cx:message>-->
+				<!-- Need to add these:
 				
-				<!--<p:identity message="{
+				/xsl:stylesheet/@meta:description ||
+				/xsl:stylesheet/@meta:name ||
+				
+				-->
+				
+				<p:variable
+					name="step"
+					select="tokenize(document-uri(/), '/')[last()]">
+					<p:pipe
+						port="matched"
+						step="split-stylesheets"/>
+				</p:variable>
+				
+				<p:identity message="{
 					'Running - ' ||
-					/xsl:stylesheet/@meta:description ||
-					/xsl:stylesheet/@meta:name ||
-					tokenize(document-uri(/), '/')[last()][1]
+					$step
 					}">
 					<p:with-input>
 						<p:pipe port="matched" step="split-stylesheets"/>
-					</p:with-input>
-				</p:identity>-->
-				
-				<p:identity>
-					<p:with-input>
-						<p:inline>
-							<p>Running</p>
-						</p:inline>
 					</p:with-input>
 				</p:identity>
 				
