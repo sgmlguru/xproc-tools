@@ -308,7 +308,7 @@
 		</p:output>
 
 		<!-- resolve uris and load all the imports except those that are not enabled -->
-		<p:xslt version="2.0" name="process-imports">
+		<p:xslt version="3.0" name="process-imports">
 
 			<p:with-input port="source">
 				<p:pipe port="source" step="normalise-manifest"/>

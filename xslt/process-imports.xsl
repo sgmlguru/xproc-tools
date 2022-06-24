@@ -1,8 +1,9 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns="http://www.corbas.co.uk/ns/transforms/manifest"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xpath-default-namespace="http://www.corbas.co.uk/ns/transforms/manifest"
-    version="2.0">
+    version="3.0">
     
     <xsl:output indent="yes"/>
     
@@ -14,7 +15,7 @@
     
       
     <xsl:template match="@xml:base">
-        <xsl:attribute name="xml:base" select="resolve-uri(.)"></xsl:attribute>
+        <xsl:attribute name="xml:base" select="resolve-uri(.)"/>
     </xsl:template>
     
     <xsl:template match="@href|@stylesheet">
