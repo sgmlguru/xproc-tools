@@ -331,12 +331,18 @@
 		<p:with-option name="verbose" select="$verbose"/>
 
 	</ccproc:threaded-xslt-impl>
+	
+	
+	<p:variable
+		name="count"
+		select="count(collection())"
+		collection="true"
+		pipe="@run-threaded-xslt"/>
 
 
 	<p:split-sequence
 		name="get-last-document"
-		test="position() = last()"
-		initial-only="true">
+		test="position() = {$count}">
 		<p:with-input>
 			<p:pipe port="result" step="run-threaded-xslt"/>
 		</p:with-input>
