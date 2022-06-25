@@ -1,9 +1,11 @@
-<p:declare-step type="ccproc:recursive-directory-list" 
-  xmlns:p="http://www.w3.org/ns/xproc"
-	version="1.0" xmlns:c="http://www.w3.org/ns/xproc-step"
+<p:declare-step
+	type="ccproc:recursive-directory-list"
+	xmlns:p="http://www.w3.org/ns/xproc"
+	xmlns:c="http://www.w3.org/ns/xproc-step"
 	xmlns:cfn="http:/www.corbas.co.uk/ns/xslt/functions"
 	xmlns:pos="http://exproc.org/proposed/steps/os"
-	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps">
+	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
+	version="3.0">
 
 	<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 		<p>This program and accompanying files are copyright 2008, 2009, 20011, 2012, 2013 Corbas
@@ -31,6 +33,9 @@
 				<code>p:directory-list</code> step. The patterns are not required to match the whole
 			path name.</p>
 	</p:documentation>
+	
+	
+	<p:import href="./directory-list.xpl"/>
 
 
 	<p:output port="result">
@@ -40,11 +45,13 @@
 				and expanded as well.</p>
 		</p:documentation>
 	</p:output>
+	
 	<p:option name="path" required="true">
 		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 			<p>The path option defines the path to be searched.</p>
 		</p:documentation>
 	</p:option>
+	
 	<p:option name="include-filter" select="''">
 		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 			<p>The <code>include-filter</code> option allows an option <em>regular expression</em>
@@ -54,6 +61,7 @@
 			<p>Directory names are not filtered and are always processed.</p>
 		</p:documentation>
 	</p:option>
+	
 	<p:option name="exclude-filter" select="''">
 		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 			<p>The <code>exclude-filter</code> option allows an option <em>regular expression</em>
@@ -64,6 +72,7 @@
 			<p>Directory names are not filtered and are always processed.</p>
 		</p:documentation>
 	</p:option>
+	
 	<p:option name="match-path" select="'false'">
 		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 			<p>The <code>match-path</code> option determines whether or not the
@@ -83,22 +92,19 @@
 				never stop. At least one directory listing level will always be generated</p>
 		</p:documentation>
 	</p:option>
-	
+
 	<p:option name="resolve" select="'false'">
-		<p:documentation  xmlns="http://www.w3.org/1999/xhtml">
-			<p>The <code>resolve</code> options sets whether or not the <code>uri</code>
-				attribute is created for a directory or file. If set to <strong>true</strong> then
-				an additional attribute — <code>uri</code> — is set. This attribute contains
-				the resolved uri for any file or directory</p>
+		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
+			<p>The <code>resolve</code> options sets whether or not the <code>uri</code> attribute
+				is created for a directory or file. If set to <strong>true</strong> then an
+				additional attribute — <code>uri</code> — is set. This attribute contains the
+				resolved uri for any file or directory</p>
 		</p:documentation>
 	</p:option>
-	
 
-	<p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-  <p:import href="http://xml.corbas.co.uk/xml/xproc-tools/xproc/directory-list.xpl"/>
 
 	<!-- find out the directory separator -->
-	<pos:info name="get-os-info"/>
+	<!--<p:os-info name="get-os-info"/>-->
 
 	<!-- get the listing fo the top directory -->
 	<ccproc:directory-list name="listing">
@@ -111,30 +117,31 @@
 
 	<p:viewport match="/c:directory/c:directory" name="recurse-directory">
 		<p:variable name="name" select="/*/@name"/>
-		<p:variable name="separator" select="/c:result/@file-separator">
-			<p:pipe port="result" step="get-os-info"/>
+		<p:variable name="separator" select="'/'">
+			<!--<p:pipe port="result" step="get-os-info"/>-->
 		</p:variable>
-		
+
 
 		<p:choose>
-			
+
 			<p:when test="$depth != 0">
 
 				<ccproc:recursive-directory-list>
-					<p:with-option name="path" select="concat($path,$separator,encode-for-uri($name))"/>
+					<p:with-option name="path"
+						select="concat($path,$separator,encode-for-uri($name))"/>
 					<p:with-option name="include-filter" select="$include-filter"/>
 					<p:with-option name="exclude-filter" select="$exclude-filter"/>
 					<p:with-option name="match-path" select="$match-path"/>
 					<p:with-option name="depth" select="$depth - 1"/>
 					<p:with-option name="resolve" select="$resolve"/>
 				</ccproc:recursive-directory-list>
-				
+
 			</p:when>
-			
+
 			<p:otherwise>
 				<p:identity/>
 			</p:otherwise>
-			
+
 		</p:choose>
 
 	</p:viewport>
