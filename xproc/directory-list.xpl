@@ -1,8 +1,12 @@
-<p:declare-step type="ccproc:directory-list" xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
-	xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions"
+<p:declare-step
+	type="ccproc:directory-list"
+	xmlns:p="http://www.w3.org/ns/xproc"
+	xmlns:c="http://www.w3.org/ns/xproc-step"
+	xmlns:cx="http://xmlcalabash.com/ns/extensions"
 	xmlns:cfn="http:/www.corbas.co.uk/ns/xslt/functions"
 	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
-	 name="directory-list" >
+	name="directory-list"
+	version="3.0">
 
 	<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 		<p>This program and accompanying files are copyright 2008, 2009, 20011, 2012, 2013 Corbas
@@ -38,11 +42,13 @@
 		</p:documentation>
 		<p:pipe port="result" step="filter-listing"/>
 	</p:output>
+	
 	<p:option name="path" required="true">
 		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 			<p>The path option defines the path to be searched.</p>
 		</p:documentation>
 	</p:option>
+	
 	<p:option name="include-filter" select="''">
 		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 			<p>The <code>include-filter</code> option allows an option <em>regular expression</em>
@@ -52,6 +58,7 @@
 			<p>Directory names are not filtered and are always processed.</p>
 		</p:documentation>
 	</p:option>
+	
 	<p:option name="exclude-filter" select="''">
 		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 			<p>The <code>exclude-filter</code> option allows an option <em>regular expression</em>
@@ -82,15 +89,6 @@
 			the resolved uri for any file or directory</p>
 		</p:documentation>
 	</p:option>
-  
-<!--
-  <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-  
-  <cx:message>
-    <p:input port="source"><p:empty/></p:input>
-    <p:with-option name="message" select="concat('Generating listing for' , $path)"/>
-  </cx:message>  
--->
 
 	<!-- get the listing fo the top directory -->
 	<p:directory-list name="listing">
@@ -99,10 +97,10 @@
 
 	<!-- filter -->
 	<p:xslt name="filter-listing">
-		<p:input port="source">
+		<p:with-input port="source">
 			<p:pipe port="result" step="listing"/>
-		</p:input>
-		<p:input port="stylesheet">
+		</p:with-input>
+		<p:with-input port="stylesheet">
 			<p:inline>
 				<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 					xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -159,14 +157,17 @@
 
 				</xsl:stylesheet>
 			</p:inline>
-		</p:input>
-		<p:with-param name="include-filter" select="$include-filter"/>
-		<p:with-param name="exclude-filter"	select="$exclude-filter"/>
-		<p:with-param name="match-path" select="$match-path"/>
-		<p:with-param name="resolve" select="if (lower-case($resolve) eq 'true') then 'true' else 'false'"/>
+		</p:with-input>
+		
+		<p:with-option
+			name="parameters"
+			select="map{
+			'include-filter': $include-filter,
+			'exclude-filter': $exclude-filter,
+			'match-path': $match-path,
+			'resolve': $resolve
+			}"/>
 		
 	</p:xslt>
-
-
 
 </p:declare-step>
