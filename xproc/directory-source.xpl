@@ -13,7 +13,7 @@
       depending on the setting of the <code>fail-on-error</code> attribute.</p>
   </p:documentation>
   
-  <p:import href="http://xml.corbas.co.uk/xml/xproc-tools/xproc/recursive-directory-list.xpl"/>
+  <p:import href="./recursive-directory-list.xpl"/>
 
   <p:output port="result" primary="true" sequence="true">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -80,7 +80,7 @@
 
     <p:group>
 
-      <p:output port="result">
+      <p:output port="result" sequence="true">
         <p:pipe port="result" step="process-directory"/>
       </p:output>
 
@@ -100,7 +100,7 @@
 
     <p:catch>
 
-      <p:output port="result">
+      <p:output port="result" sequence="true">
         <p:empty/>
       </p:output>
 
@@ -127,7 +127,7 @@
   </p:count>
   
   <p:variable name="test" select="number(/c:result)">
-    <p:pipe port="result" step="dir-errors"/>
+    <p:pipe port="result" step="count-dir-errors"/>
   </p:variable>
   
 
@@ -169,6 +169,8 @@
         
 
         <p:try name="try-load">
+          
+          <p:output port="result" primary="true"/>
 
           <p:group>
 
@@ -190,7 +192,7 @@
           <p:catch name="catch-load">
 
             <p:output port="result" primary="true" sequence="true">
-              <p:empty/>
+              <p:pipe step="copy-errors" port="result"></p:pipe>
             </p:output>
 
             <!-- We have to do *something* in a catch, so let's copy the errors -->
