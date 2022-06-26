@@ -2,6 +2,8 @@
 <p:declare-step
   xmlns:p="http://www.w3.org/ns/xproc"
   xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
+  xmlns:sgproc="http://www.sgmlguru.org/ns/xproc/steps"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:c="http://www.w3.org/ns/xproc-step"
   name="directory-source"
   type="ccproc:directory-source"
@@ -28,7 +30,7 @@
     </p:documentation>
   </p:option>
 
-  <p:option name="include-filter" select="''">
+  <p:option name="include-filter" as="xs:string*" required="false">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
       <p>The <code>include-filter</code> option allows an option <em>regular expression</em> to be
         applied to either the file name or path name (depending on the value of
@@ -38,7 +40,7 @@
     </p:documentation>
   </p:option>
 
-  <p:option name="exclude-filter" select="''">
+  <p:option name="exclude-filter" as="xs:string*" required="false">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
       <p>The <code>exclude-filter</code> option allows an option <em>regular expression</em> to be
         applied to either the file name or path name (depending on the value of
@@ -48,8 +50,9 @@
       <p>Directory names are not filtered and are always processed.</p>
     </p:documentation>
   </p:option>
-
-  <p:option name="match-path" select="'false'">
+  
+  <!-- NOTE: REMOVED IN 3.0 -->
+  <!--<p:option name="match-path" select="'false'">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
       <p>The <code>match-path</code> option determines whether or not the
           <code>include-filter</code> and <code>exclude-filter</code> options should apply to the
@@ -57,13 +60,13 @@
         the file name will be combined with the path before the regular expressions are applied. If
         set to any other value then only the file name is tested.</p>
     </p:documentation>
-  </p:option>
+  </p:option>-->
 
-  <p:option name="depth" select="-1">
+  <p:option name="depth" select="'unbounded'">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
       <p>The <code>depth</code> option allows the depth of recursion to be restricted. The depth
         counter is decremented by one for each recursion. If it ever drops to zero, recursion will
-        stop. The default value is <strong>-1</strong> so recursion will never stop. At least one
+        stop. The default value is <strong>unbounded</strong> so recursion will never stop. At least one
         directory listing level will always be generated</p>
     </p:documentation>
   </p:option>
@@ -75,6 +78,8 @@
         written and the document dropped from the output list.</p>
     </p:documentation>
   </p:option>
+  
+  
 
   <p:try name="try-listing">
 
@@ -88,13 +93,12 @@
         <p:empty/>
       </p:output>
 
-      <ccproc:recursive-directory-list name="process-directory" resolve="true">
+      <sgproc:recursive-directory-list name="process-directory" resolve="true">
         <p:with-option name="include-filter" select="$include-filter"/>
         <p:with-option name="exclude-filter" select="$exclude-filter"/>
-        <p:with-option name="match-path" select="$match-path"/>
         <p:with-option name="depth" select="$depth"/>
         <p:with-option name="path" select="resolve-uri($path)"/>
-      </ccproc:recursive-directory-list>
+      </sgproc:recursive-directory-list>
 
     </p:group>
 
@@ -140,13 +144,12 @@
       </p:output>
 
       <!-- reraise the error -->
-      <ccproc:recursive-directory-list name="re-process-directory" resolve="true">
+      <sgproc:recursive-directory-list name="re-process-directory" resolve="true">
         <p:with-option name="include-filter" select="$include-filter"/>
         <p:with-option name="exclude-filter" select="$exclude-filter"/>
-        <p:with-option name="match-path" select="$match-path"/>
         <p:with-option name="depth" select="$depth"/>
         <p:with-option name="path" select="resolve-uri($path)"/>
-      </ccproc:recursive-directory-list>
+      </sgproc:recursive-directory-list>
 
     </p:when>
 

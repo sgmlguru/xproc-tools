@@ -3,8 +3,9 @@
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:sgproc="http://www.sgmlguru.org/ns/xproc/steps"
     xmlns:c="http://www.w3.org/ns/xproc-step"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
     type="sgproc:recursive-directory-list"
-    name="dirlist"
+    name="recursive-directory-list"
     version="3.0">
     
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -31,7 +32,7 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="include-filter" select="''">
+    <p:option name="include-filter" as="xs:string*" required="false">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <p>The <code>include-filter</code> option allows an option <em>regular expression</em>
                 to be applied to either the file name or path name (depending on the value of
@@ -41,7 +42,7 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="exclude-filter" select="''">
+    <p:option name="exclude-filter" as="xs:string*" required="false">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <p>The <code>exclude-filter</code> option allows an option <em>regular expression</em>
                 to be applied to either the file name or path name (depending on the value of
@@ -52,7 +53,8 @@
         </p:documentation>
     </p:option>
     
-    <p:option name="match-path" select="'false'">
+    <!-- NOTE: REMOVED IN 3.0 -->
+    <!--<p:option name="match-path" select="'false'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <p>The <code>match-path</code> option determines whether or not the
                 <code>include-filter</code> and <code>exclude-filter</code> options should apply
@@ -61,7 +63,7 @@
                 expressions are applied. If set to any other value then only the file name is
                 tested.</p>
         </p:documentation>
-    </p:option>
+    </p:option>-->
     
     <p:option name="depth" select="'unbounded'">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -84,15 +86,18 @@
     <p:directory-list
         name="ls"
         path="{$path}"
-        max-depth="{$depth}"
-        include-filter="{$include-filter}"
-        exclude-filter="{$exclude-filter}"/>
+        max-depth="{$depth}">
+        <p:with-option name="exclude-filter" select="$exclude-filter"/>
+        <p:with-option name="include-filter" select="$include-filter"/>
+    </p:directory-list>
     
-    <p:xslt name="uri" version="3.0" use-when="lower-case($resolve) = 'true'">
+    <p:xslt name="uri" version="3.0">
         <p:with-input port="stylesheet">
             <xsl:stylesheet version="3.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:c="http://www.w3.org/ns/xproc-step">
+                
+                <xsl:output indent="true"/>
                 
                 <xsl:template match="/">
                     <xsl:apply-templates select="node()"/>
