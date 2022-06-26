@@ -6,6 +6,8 @@
 	version="3.0"
 	name="test">
 	
+	<p:documentation>This test has been deprecated.</p:documentation>
+	
 	<p:import href="../xproc/split-document.xpl"/>
 	
 	<p:input port="source">
