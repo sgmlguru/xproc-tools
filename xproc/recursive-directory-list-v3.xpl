@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step
     xmlns:p="http://www.w3.org/ns/xproc"
-    xmlns:sg="http://www.sgmlguru.org/ns/tests"
-    xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
+    xmlns:sgproc="http://www.sgmlguru.org/ns/xproc/steps"
     xmlns:c="http://www.w3.org/ns/xproc-step"
-    type="sg:recursive-directory-list"
+    type="sgproc:recursive-directory-list"
     name="dirlist"
     version="3.0">
     
