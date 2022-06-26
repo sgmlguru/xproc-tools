@@ -24,6 +24,7 @@ XProc 1.0's `directory-list` step did not have a recurse function built in for s
 * Nic's step has an optional `@uri` attribute with the full resolved base-uri added to each `c:file` while XProc 3.0 does not. Therefore my new `recursive-directory-list` step reproduces this feature.
 * Nic's step has an option `match-path` to optionally allow include and exclude filters to match the full path, not just the filename. This is no longer supported, as 3.0's filtering approach differs from 1.0's.
 * As the fork's step is no longer the same as Nic's, the new step's namespace and associated prefix are different: `xmlns:sgproc="http://www.sgmlguru.org/ns/xproc/steps"`.
+* I've left the old step in the repository - see `recursive-directory-list-DEPRECATED.xpl`. It's been ported to XProc 3.0 and works perfectly well. You'll need to change its name and any calls to it in `directory-source.xpl`, and any tests, if you do want to use it.
 
 
 ## oXygen XProc 3.0 Framework
