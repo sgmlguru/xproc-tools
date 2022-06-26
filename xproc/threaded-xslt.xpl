@@ -202,7 +202,8 @@
 		<!-- what are we running (verbose only) -->
 		<p:choose name="check-verbose">
 			<p:when test="$verbose = 'true'">
-				<!-- Need to add these:
+				
+				<!-- These were in the original but did not work:
 				
 				/xsl:stylesheet/@meta:description ||
 				/xsl:stylesheet/@meta:name ||
@@ -234,7 +235,7 @@
 		<p:sink/>
 		
 		<!-- Combined params (external from calling XProc, meta params from manifests) -->
-		<p:variable name="combined-params" select="map:merge($parameters,.)">
+		<p:variable name="combined-params" select="map:merge(($parameters,.))">
 			<p:pipe port="result" step="additional-params"/>
 		</p:variable>
 
