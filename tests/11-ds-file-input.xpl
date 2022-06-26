@@ -6,7 +6,7 @@
   xmlns:c="http://www.w3.org/ns/xproc-step"
   version="3.0">
 
-  <p:documentation>Load a simple directory of xml files</p:documentation>
+  <p:documentation>Load a simple directory of xml files. This pipeline will fail, as it points at a file, not a directory.</p:documentation>
 
   <p:import href="../xproc/directory-source.xpl"/>
 
