@@ -37,9 +37,6 @@
 		<p:with-input port="source">
 			<p:pipe port="source" step="tester"/>
 		</p:with-input>
-		<p:with-input port="parameters">
-			<p:empty/>
-		</p:with-input>
 	</ccproc:threaded-xslt>
 
 
