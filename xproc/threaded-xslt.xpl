@@ -10,6 +10,7 @@
 	xmlns:p="http://www.w3.org/ns/xproc"
 	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:map="http://www.w3.org/2005/xpath-functions/map"
 	version="3.0">
 
 	<p:documentation> This program and accompanying files are copyright 2008, 2009, 2011, 2012,
@@ -48,12 +49,12 @@
 		</p:documentation>
 	</p:input>
 
-	<p:input port="parameters" sequence="true">
+	<p:option name="parameters">
 		<p:documentation>
-			<p xmlns="http:/www.w3.org/1999/xhtml">The parameters to be passed to the p:xslt
-				steps.</p>
+			<p xmlns="http:/www.w3.org/1999/xhtml">The parameters to be passed to the p:xslt steps.</p>
+			<p xmlns="http:/www.w3.org/1999/xhtml">Note that this is a map.</p>
 		</p:documentation>
-	</p:input>
+	</p:option>
 
 	<p:output port="result" primary="true" sequence="true">
 		<p:documentation>
@@ -79,6 +80,7 @@
 	</p:option>
 	
 	
+	<!-- Convert meta in manifests to parameter map -->
 	<p:declare-step
 		name="convert-meta"
 		type="ccproc:convert-meta-to-param">
@@ -115,7 +117,8 @@
 
 	</p:declare-step>
 
-
+	
+	<!-- Internal step for recursion -->
 	<p:declare-step
 		name="threaded-xslt-impl"
 		type="ccproc:threaded-xslt-impl"
@@ -139,11 +142,12 @@
 			</p:documentation>
 		</p:input>
 
-		<p:input port="parameters" sequence="true">
+		<p:option name="parameters">
 			<p:documentation>
 				<p xmlns="http:/www.w3.org/1999/xhtml">XSLT parameters</p>
+				<p xmlns="http:/www.w3.org/1999/xhtml">Note that this is a map.</p>
 			</p:documentation>
-		</p:input>
+		</p:option>
 
 		<p:output port="result" primary="true" sequence="true">
 			<p:documentation>
@@ -170,7 +174,7 @@
 			</p:with-input>
 		</p:split-sequence>
 
-		<!-- How many of these are left? We actually only care to know  if there are *any* hence the limit. -->
+		<!-- How many of these are left? We actually only care to know if there are *any* hence the limit. -->
 		<p:count
 			name="count-remaining-transformations"
 			limit="1">
@@ -228,20 +232,21 @@
 			</p:otherwise>
 		</p:choose>
 		<p:sink/>
+		
+		<!-- Combined params (external from calling XProc, meta params from manifests) -->
+		<p:variable name="combined-params" select="map:merge($parameters,.)">
+			<p:pipe port="result" step="additional-params"/>
+		</p:variable>
 
 		<!-- run the stylesheet, merging parameters - params from the
 				XProc run override those in the manifest -->
-		<p:xslt name="run-single-xslt" version="3.0">
+		<p:xslt name="run-single-xslt" version="3.0" parameters="$combined-params">
 			<p:with-input port="stylesheet">
 				<p:pipe port="matched" step="split-stylesheets"/>
 			</p:with-input>
 			<p:with-input port="source">
 				<p:pipe port="source" step="threaded-xslt-impl"/>
 			</p:with-input>
-			<p:with-option name="parameters" select=".">
-				<p:pipe port="result" step="additional-params"/>
-				<p:pipe port="parameters" step="threaded-xslt-impl"/>
-			</p:with-option>
 		</p:xslt>
 
 
@@ -251,10 +256,6 @@
     	transformation sequence 
    		-->
 		<p:choose name="determine-recursion">
-
-			<!--<p:xpath-context>
-				<p:pipe port="result" step="count-remaining-transformations"/>
-			</p:xpath-context>-->
 			
 			<!-- If we have any transformations remaining recurse -->
 			<p:when test="$test > 0">
@@ -274,9 +275,7 @@
 						<p:pipe port="result" step="run-single-xslt"/>
 					</p:with-input>
 
-					<p:with-input port="parameters">
-						<p:pipe port="parameters" step="threaded-xslt-impl"/>
-					</p:with-input>
+					<p:with-option name="parameters" select="$parameters"/>
 
 					<!-- make sure the verbose option is also transmitted -->
 					<p:with-option name="verbose" select="$verbose"/>
@@ -316,9 +315,7 @@
 			<p:pipe port="stylesheets" step="threaded-xslt"/>
 		</p:with-input>
 
-		<p:with-input port="parameters">
-			<p:pipe port="parameters" step="threaded-xslt"/>
-		</p:with-input>
+		<p:with-option name="parameters" select="$parameters"/>
 		
 		<p:with-option name="verbose" select="$verbose"/>
 
