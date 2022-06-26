@@ -6,7 +6,7 @@
 	xmlns:c="http://www.w3.org/ns/xproc-step"
 	version="3.0">
 
-	<p:documentation>Test processing of additional parameters.</p:documentation>
+	<p:documentation>Test processing of additional parameters. This shows the intermediates produced by the XSLT manifest.</p:documentation>
 	
 	<p:import href="../xproc/load-sequence-from-file.xpl"/>
 	<p:import href="../xproc/threaded-xslt.xpl"/>
