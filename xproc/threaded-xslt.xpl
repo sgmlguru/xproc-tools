@@ -110,8 +110,7 @@
 				<p:pipe port="stylesheet" step="convert-meta"/>
 			</p:with-input>
 			<p:with-input port="stylesheet">
-				<p:document href="../xslt/build-params.xsl"/>
-				<!-- http://xml.corbas.co.uk/xml/xproc-tools/xslt/build-params.xsl -->
+				<p:document href="http://xml.corbas.co.uk/xml/xproc-tools/xslt/build-params.xsl"/>
 			</p:with-input>
 		</p:xslt>
 
