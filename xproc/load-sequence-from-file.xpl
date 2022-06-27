@@ -315,8 +315,7 @@
 			</p:with-input>
 
 			<p:with-input port="stylesheet">
-				<p:document href="../xslt/process-imports.xsl"/>
-				<!-- http://xml.corbas.co.uk/xml/xproc-tools/xslt/process-imports.xsl -->
+				<p:document href="http://xml.corbas.co.uk/xml/xproc-tools/xslt/process-imports.xsl"/>
 			</p:with-input>
 
 		</p:xslt>
@@ -329,8 +328,7 @@
 			</p:with-input>
 
 			<p:with-input port="stylesheet">
-				<p:document href="../xslt/remove-disabled.xsl"/>
-				<!-- http://xml.corbas.co.uk/xml/xproc-tools/xslt/remove-disabled.xsl -->
+				<p:document href="http://xml.corbas.co.uk/xml/xproc-tools/xslt/remove-disabled.xsl"/>
 			</p:with-input>
 
 		</p:xslt>
@@ -346,8 +344,7 @@
 			the 'nearest' (lowest in the document tree) metadata element with
 			a given name is assigned to the item -->
 			<p:with-input port="stylesheet">
-				<p:document href="../xslt/normalise-metadata.xsl"/>
-				<!-- http://xml.corbas.co.uk/xml/xproc-tools/xslt/normalise-metadata.xsl -->
+				<p:document href="http://xml.corbas.co.uk/xml/xproc-tools/xslt/normalise-metadata.xsl"/>
 			</p:with-input>
 
 		</p:xslt>
@@ -359,8 +356,7 @@
 			</p:with-input>
 
 			<p:with-input port="stylesheet">
-				<p:document href="../xslt/flatten-manifest.xsl"/>
-				<!-- http://xml.corbas.co.uk/xml/xproc-tools/xslt/flatten-manifest.xsl -->
+				<p:document href="http://xml.corbas.co.uk/xml/xproc-tools/xslt/flatten-manifest.xsl"/>
 			</p:with-input>
 
 		</p:xslt>
