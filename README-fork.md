@@ -15,6 +15,7 @@ We note the following:
 	- The recursive directory listing steps is reimplemented using standard XProc 3.0, plus a little XSLT to add the `@uri` attribute to `c:file`.
 	- The previously required Calabash extension steps are reimplemented using standard XProc 3.0, with the exception of an OS-specific step to find out the path separator being used that is not yet implemented in XProc 3.0.
 * (XSLT) parameters in XProc 3.0 are key/value pairs expressed as *maps*, which forced me to change 1.0's `input` parameters to `option`s and rewrite the XSLT that adds manifest `meta` key/value pairs to the manifest item sequences to produce maps rather than `c:param-set`.
+* There are several new tests, including 03c that tests intermediate step and intermediate URL output from threaded XSLT pipelines. This is needed for XSLT debug output when running manifests.
 
 
 ### Recursive Directory Listing Step
