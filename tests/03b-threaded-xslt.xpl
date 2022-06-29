@@ -8,8 +8,8 @@
 
 	<p:documentation>Test processing of additional parameters. This shows the intermediates produced by the XSLT manifest.</p:documentation>
 	
-	<p:import href="../xproc/load-sequence-from-file.xpl"/>
-	<p:import href="../xproc/threaded-xslt.xpl"/>
+	<p:import href="http://xml.corbas.co.uk/xml/xproc-tools/xproc/load-sequence-from-file.xpl"/>
+	<p:import href="http://xml.corbas.co.uk/xml/xproc-tools/xproc/threaded-xslt.xpl"/>
 
 	<p:input port="manifest">
 		<p:document href="manifests/03-manifest-metadata.xml"/>

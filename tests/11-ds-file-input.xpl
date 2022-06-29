@@ -8,7 +8,7 @@
 
   <p:documentation>Load a simple directory of xml files. This pipeline will fail, as it points at a file, not a directory.</p:documentation>
 
-  <p:import href="../xproc/directory-source.xpl"/>
+  <p:import href="http://xml.corbas.co.uk/xml/xproc-tools/xproc/directory-source.xpl"/>
 
   <p:output port="result" sequence="true" serialization="map{'indent': true()}">
     <p:pipe port="result" step="loader"/>

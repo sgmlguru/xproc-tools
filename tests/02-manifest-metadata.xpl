@@ -8,7 +8,7 @@
 	
 	<p:documentation>Test the addition of params to files loaded from a manifest. </p:documentation>
 	
-	<p:import href="../xproc/load-sequence-from-file.xpl"/>
+	<p:import href="http://xml.corbas.co.uk/xml/xproc-tools/xproc/load-sequence-from-file.xpl"/>
 	
 	<p:input port="manifest">
 		<p:document href="manifests/02-manifest-metadata.xml"/>

@@ -9,7 +9,7 @@
 	
 	<p:documentation>Simple test driver for the load-sequence-from-file module. Tests loading of two simple documents.</p:documentation>
 	
-	<p:import href="../xproc/load-sequence-from-file.xpl"/>
+	<p:import href="http://xml.corbas.co.uk/xml/xproc-tools/xproc/load-sequence-from-file.xpl"/>
 	
 	<p:input port="manifest">
 		<p:document href="manifests/03-manifest-metadata.xml"/>

@@ -9,7 +9,7 @@
 	<p:documentation>Simple test driver for the directory-listing module. Runs with resolve on and off. 
 	Filters on xml and xpl documents</p:documentation>
 	
-	<p:import href="../xproc/directory-list.xpl"/>
+	<p:import href="http://xml.corbas.co.uk/xml/xproc-tools/xproc/directory-list.xpl"/>
 	
 	<p:output port="result" serialization="map{'indent': true()}">
 		<p:pipe port="result" step="merge-load"/>

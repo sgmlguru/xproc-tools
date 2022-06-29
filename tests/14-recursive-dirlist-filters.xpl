@@ -11,7 +11,7 @@
     
     <p:documentation>This lists two files in $dir but leaves out the one with the .xxx suffix</p:documentation>
     
-    <p:import href="../xproc/recursive-directory-list.xpl"/>
+    <p:import href="http://xml.corbas.co.uk/xml/xproc-tools/xproc/recursive-directory-list.xpl"/>
     
     <p:output port="result" serialization="map{'input': true()}"/>
     
