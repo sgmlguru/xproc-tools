@@ -15,7 +15,7 @@
       depending on the setting of the <code>fail-on-error</code> attribute.</p>
   </p:documentation>
   
-  <p:import href="./recursive-directory-list.xpl"/>
+  <p:import href="http://xml.corbas.co.uk/xml/xproc-tools/xproc/recursive-directory-list.xpl"/>
 
   <p:output port="result" primary="true" sequence="true">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
