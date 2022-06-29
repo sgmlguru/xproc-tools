@@ -12,7 +12,7 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="item[ancestor::*/meta]">
+    <xsl:template match="item[ancestor::*/meta or meta]">
         <xsl:copy>
             <xsl:apply-templates select="@* | * except meta"/>
             <xsl:apply-templates select="." mode="copy-meta">
