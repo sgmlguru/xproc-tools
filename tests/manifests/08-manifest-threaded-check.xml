@@ -6,10 +6,12 @@
  <!--   <meta name="bar-param" value="bar-value"/>
  -->   
     
-    <item href="xslt/test-01.xsl"/>
+    <item href="xslt/test-01.xsl">
+       <meta name="test-param" value="test-value-at-item"/>
+    </item>
     
     <item href="xslt/test-02.xsl">
- <!--       <meta name="test-param" value="test-value-at-item"/>-->
+        <!--<meta name="test-param" value="test-value-at-item"/>-->
     </item>
     
     
